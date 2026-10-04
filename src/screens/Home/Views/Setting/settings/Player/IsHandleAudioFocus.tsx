@@ -4,6 +4,7 @@ import { createStyle, toast } from '@/utils/tools'
 import { memo } from 'react'
 import { Platform, View } from 'react-native'
 import { useSettingValue } from '@/store/setting/hook'
+import { reloadConfig as reloadPlayerConfig } from '@/plugins/player'
 
 
 import CheckBoxItem from '../../components/CheckBoxItem'
@@ -13,7 +14,9 @@ export default memo(() => {
   const isHandleAudioFocus = useSettingValue('player.isHandleAudioFocus')
   const setHandleAudioFocus = (isHandleAudioFocus: boolean) => {
     updateSetting({ 'player.isHandleAudioFocus': isHandleAudioFocus })
-    toast(t('setting_play_handle_audio_focus_tip'))
+    // 该设置只在播放器初始化时读取，需重建播放器才能生效（会短暂中断播放后自动恢复）
+    void reloadPlayerConfig()
+    toast(t('setting_play_handle_audio_focus_applied'))
   }
 
   return (

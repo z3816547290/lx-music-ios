@@ -352,6 +352,7 @@
   "setting_play_cache_size_save_tip": "The cache is set and takes effect after restarting the app.",
   "setting_play_handle_audio_focus": "Automatically pause playback when other apps playing sound",
   "setting_play_handle_audio_focus_tip": "Take effect after restarting the app",
+  "setting_play_handle_audio_focus_applied": "Applied. Playback will briefly pause and resume automatically.",
   "setting_play_handle_audio_focus_desc_ios": "On iOS, turning this off lets LX Music play at the same time as apps like TikTok or RedNote, but playback info will no longer appear on the lock screen, notification center or Control Center, and playback cannot be controlled from there.\n\nCalls and voice messages (e.g. WeChat voice) will still interrupt playback. This is a system limitation.",
   "setting_play_lyric_transition": "Show translated lyrics",
   "setting_play_play_quality": "Prioritize Sound Quality for Playback If Available",

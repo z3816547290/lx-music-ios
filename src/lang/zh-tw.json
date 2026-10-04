@@ -352,6 +352,7 @@
   "setting_play_cache_size_save_tip": "快取設定完畢，重啟應用後生效",
   "setting_play_handle_audio_focus": "其他應用播放聲音時，自動暫停播放",
   "setting_play_handle_audio_focus_tip": "重啟應用後生效",
+  "setting_play_handle_audio_focus_applied": "已套用，播放會短暫中斷後自動恢復",
   "setting_play_handle_audio_focus_desc_ios": "iOS 上關閉此項後，可與抖音、小紅書等應用同時播放聲音，但鎖屏、通知欄與控制中心將不再顯示播放資訊，也無法從中控制播放。\n\n通話與語音（如微信語音）仍會打斷播放，這是系統限制。",
   "setting_play_lyric_transition": "顯示歌詞翻譯",
   "setting_play_play_quality": "優先播放的音質（如果可用）",
