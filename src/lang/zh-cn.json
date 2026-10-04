@@ -352,6 +352,7 @@
   "setting_play_cache_size_save_tip": "缓存设置完毕，重启应用后生效",
   "setting_play_handle_audio_focus": "其他应用播放声音时，自动暂停播放",
   "setting_play_handle_audio_focus_tip": "重启应用后生效",
+  "setting_play_handle_audio_focus_desc_ios": "iOS 上关闭此项后，可与抖音、小红书等应用同时播放声音，但锁屏、通知栏与控制中心将不再显示播放信息，也无法从中控制播放。\n\n通话与语音（如微信语音）仍会打断播放，这是系统限制。",
   "setting_play_lyric_transition": "显示歌词翻译",
   "setting_play_play_quality": "优先播放的音质（如果可用）",
   "setting_play_s2t": "将播放的中文歌词转换为繁体",

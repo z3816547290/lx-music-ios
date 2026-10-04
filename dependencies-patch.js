@@ -805,6 +805,63 @@ private let lxTrackPlayerLifecycleNotification = Notification.Name("LXTrackPlaye
       },
     ],
   },
+  // 临时诊断：把 iOS 音频会话的实际生效状态回报给 JS，便于确认 setCategory 是否成功。
+  // 原代码用 `try?` 吞掉了 setCategory 的错误，导致失败时无从排查。
+  {
+    filePath: 'node_modules/react-native-track-player/ios/RNTrackPlayer/RNTrackPlayer.swift',
+    changes: [
+      {
+        from: `        // Progressively opt into AVAudioSession policies for background audio
+        // and AirPlay 2.
+        if #available(iOS 13.0, *) {
+            try? AVAudioSession.sharedInstance().setCategory(sessionCategory, mode: sessionCategoryMode, policy: sessionCategory == .ambient ? .default : .longFormAudio, options: sessionCategoryOptions)
+        } else if #available(iOS 11.0, *) {
+            try? AVAudioSession.sharedInstance().setCategory(sessionCategory, mode: sessionCategoryMode, policy: sessionCategory == .ambient ? .default : .longForm, options: sessionCategoryOptions)
+        } else {
+            try? AVAudioSession.sharedInstance().setCategory(sessionCategory, mode: sessionCategoryMode, options: sessionCategoryOptions)
+        }`,
+        to: `        // Progressively opt into AVAudioSession policies for background audio
+        // and AirPlay 2.
+        // 原实现用 try? 会静默吞掉错误，导致类别设置失败时无从排查，改为捕获并上报。
+        var lxSetCategoryError = ""
+        if sessionCategoryOptions.contains(.mixWithOthers) {
+            // 需要与其他应用混音时，不能使用带 policy 的重载：
+            // longFormAudio 与显式 options 的组合会被系统拒绝（实测 iOS 15.1 返回 -50，
+            // 会话会回退到默认的 SoloAmbient，导致后台播放失效）。
+            do {
+                try AVAudioSession.sharedInstance().setCategory(sessionCategory, mode: sessionCategoryMode, options: sessionCategoryOptions)
+            } catch {
+                lxSetCategoryError = "\\(error)"
+            }
+        } else if #available(iOS 13.0, *) {
+            do {
+                try AVAudioSession.sharedInstance().setCategory(sessionCategory, mode: sessionCategoryMode, policy: sessionCategory == .ambient ? .default : .longFormAudio, options: sessionCategoryOptions)
+            } catch {
+                lxSetCategoryError = "\\(error)"
+            }
+        } else if #available(iOS 11.0, *) {
+            do {
+                try AVAudioSession.sharedInstance().setCategory(sessionCategory, mode: sessionCategoryMode, policy: sessionCategory == .ambient ? .default : .longForm, options: sessionCategoryOptions)
+            } catch {
+                lxSetCategoryError = "\\(error)"
+            }
+        } else {
+            do {
+                try AVAudioSession.sharedInstance().setCategory(sessionCategory, mode: sessionCategoryMode, options: sessionCategoryOptions)
+            } catch {
+                lxSetCategoryError = "\\(error)"
+            }
+        }
+
+        // 仅在设置失败时上报，正常路径不产生任何输出
+        if !lxSetCategoryError.isEmpty {
+            self.sendEvent(withName: "playback-error", body: [
+                "error": "setCategory failed (category=\\(sessionCategory.rawValue), options=\\(sessionCategoryOptions.rawValue)): \\(lxSetCategoryError)"
+            ])
+        }`,
+      },
+    ],
+  },
   {
     filePath: 'node_modules/react-native-track-player/react-native-track-player.podspec',
     changes: [

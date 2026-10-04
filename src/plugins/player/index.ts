@@ -1,4 +1,4 @@
-import TrackPlayer, { State } from 'react-native-track-player'
+import TrackPlayer, { IOSCategory, IOSCategoryOptions, State } from 'react-native-track-player'
 import { Platform } from 'react-native'
 import { updateOptions, setVolume, setPlaybackRate, migratePlayerCache, destroy as destroyPlayer, getPosition } from './utils'
 import { getCurrentTrack, restoreTrack, updateMetaData } from './playList'
@@ -40,6 +40,15 @@ const initial = async({ volume, playRate, cacheSize, isHandleAudioFocus, isEnabl
     handleAudioFocus: isHandleAudioFocus,
     audioOffload: isEnableAudioOffload,
     autoUpdateMetadata: false,
+    // iOS 上通过音频会话类别控制是否与其他应用同时出声：
+    // 开（默认）= playback 独占，保留锁屏与控制中心；
+    // 关 = playback + mixWithOthers，可与其他应用同时播放，同时保留后台播放。
+    ...(Platform.OS == 'ios'
+      ? {
+          iosCategory: IOSCategory.Playback,
+          iosCategoryOptions: isHandleAudioFocus ? [] : [IOSCategoryOptions.MixWithOthers],
+        }
+      : {}),
   })
   global.lx.playerStatus.isInitialized = true
   global.lx.playerStatus.isIniting = false
