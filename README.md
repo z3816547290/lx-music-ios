@@ -14,6 +14,27 @@
 
 <p align="center">一个基于 React Native 开发的音乐软件</p>
 
+## 本仓库说明
+
+这是 [Q-1515/lx-music-mobile](https://github.com/Q-1515/lx-music-mobile) 的 fork，基于其 `ios-adaptation` 分支（LX Music 1.8.2 的 iOS 适配版），用于自行构建 iOS 版并做小幅修改。
+
+### 与上游的差异
+
+- 设置项「其他应用播放声音时，自动暂停播放」在 iOS 上生效。关闭后使用 `playback + mixWithOthers` 音频会话，可与其他应用同时播放；代价是锁屏、通知栏与控制中心不再显示播放信息，也无法从中控制播放（系统限制，混音与非可混音类别互斥）。
+- 该设置切换后立即生效，无需重启 App（会短暂中断播放后自动恢复）。
+- 修复 `setCategory` 原用 `try?` 静默吞掉错误的问题。
+- `ios-ipa.yml` 仅保留手动触发，并移除 Release 发布步骤，避免误发版。
+
+除上述改动外，代码与上游 `ios-adaptation` 分支一致。
+
+### 构建
+
+在 GitHub Actions 手动触发 **Build iOS IPA**（macOS runner），产出未签名 IPA，从 Artifacts 下载。该 IPA 需自行签名安装（如 TrollStore）。
+
+### 安装
+
+产物为未签名 IPA，仅供自签安装。首次安装后需重新配置音源与列表。
+
 ## 说明
 
 所用技术栈：
@@ -21,11 +42,6 @@
 - React Native
 - Redux
 
-已支持的平台：
-
-- Android 5 及以上
-
-***注：目前没有计划支持 iOS 和 HarmonyOS NEXT**。*<br>
 *桌面版项目地址：<https://github.com/lyswhut/lx-music-desktop>*<br>
 *LX Music 项目发展调整与新项目计划：https://github.com/lyswhut/lx-music-desktop/issues/1912*
 
